@@ -3,7 +3,7 @@
 // mftpserve.c
 //
 // mftpserve.c is the server side of the miniature FTP project.
-// upon establishing connection with a client, a process is forked
+// upon establishing connection with a client, a child process is forked
 // to handle the client commands. 
 //
 
@@ -24,6 +24,12 @@
 
 #define MY_PORT_NUMBER 49999
 #define MAX_BUFFER 100
+
+//=============================================================
+// return_message
+//
+// returns the id of the socket that delivers client message 
+// to the server
 
 char* return_message(int socketfd)
 {
@@ -100,6 +106,7 @@ char* getfilename2(char* path)
 			return prev;
 
 }
+
 
 
 int setdc(int connectfd)
@@ -247,7 +254,7 @@ int main(void)
 				exit(1);
 			}
 			
-	puts("gonna listen now");
+	puts("listening for client connection");
 	
 	listen(listenfd, 4);		// set up a connection queue four level deep
 // arguments for listen: (sockfd, backlog);
@@ -371,7 +378,7 @@ while(1)
 							
 				else
 				{
-				printf("idk what youre saying dude\n");
+				printf("invalid command from user\n");
 				}
 		}
 		return 0;
