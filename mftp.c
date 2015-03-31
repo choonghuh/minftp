@@ -99,6 +99,9 @@ char* return_message(int socketfd)
 //=============================================
 // setupdc( )
 //
+// A separate socket connection is established in order to
+// carry out a data connection e.g. for downloading a file.
+// 
 
 int setupdc(int socketfd, char* path)
 {
@@ -133,11 +136,13 @@ int setupdc(int socketfd, char* path)
 //=============================================
 // rls( )
 //
+// remote ls call function
+//
 
 void rls(int datafd)
 {
 	int pid;
-	printf("okay rls\n");
+	printf("executing rls on the server\n");
 	if((pid=fork())==0)
 	{
 		dup2(datafd,0);
@@ -148,6 +153,8 @@ void rls(int datafd)
 
 //=============================================
 // get( )
+//
+// GET function that acquires a file from the server
 //
 
 void get(int datafd, char* filename)
@@ -174,8 +181,10 @@ void get(int datafd, char* filename)
 //=============================================
 // put( )
 //
+// put function to upload file from client to server
+//
 
-void put(int datafd, char* filename)		//?!?!?!?!?!?!?!? ?!? !? ?! ?!
+void put(int datafd, char* filename)
 {
 	int bytesread;
 	int fd;
@@ -207,6 +216,9 @@ void put(int datafd, char* filename)		//?!?!?!?!?!?!?!? ?!? !? ?! ?!
 //=============================================
 // show( )
 //
+// SHOW function that displays the content of the 
+// requested file
+//
 
 void show(int datafd)		// CHECK THIS TOO
 {
@@ -228,6 +240,8 @@ void show(int datafd)		// CHECK THIS TOO
 
 //=============================================
 // getfilename( )
+//
+// Function to check permission status of requested files
 //
 
 char* getfilename(char* path)
@@ -264,6 +278,10 @@ char* getfilename(char* path)
 
 //=============================================
 // getfilename( )
+//
+// For efficient execution, getfilename2 is used when
+// it is known that the requested file checked permission
+// and is indeed an existing FILE, not a dir
 //
 
 char* getfilename2(char* path)
@@ -320,7 +338,7 @@ int main(int argc, char *argv[])
 
 	for(;;)
 	{
-		printf("MFTP>>  ");
+		printf("MFTP>>  ");		// Prompt
 		fgets(call,MAX_BUFFER,stdin);
 
 		slength=strlen(call);
@@ -412,7 +430,7 @@ int main(int argc, char *argv[])
 				}
 				close(datafd);
 			}
-			else if(strncmp(call,"show",4)==0)	//show  CHECK THIS
+			else if(strncmp(call,"show",4)==0)	//show
 			{
 				filename=getfilename2(call+5);
 
